@@ -1,0 +1,3 @@
+plugins {
+    id 'eu.geekplace.beanstalk.java-library-conventions'
+}
