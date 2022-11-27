@@ -1,4 +1,6 @@
 plugins {
+	id 'eclipse'
+	id 'scala'
     id 'java'
 }
 
@@ -6,11 +8,17 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
+}
+
 dependencies {
     constraints {
-        // Define dependency versions as constraints
-        implementation 'org.apache.commons:commons-text:1.9'
     }
+	implementation 'org.scala-lang:scala3-library_3:3.2.1'
+    testImplementation 'org.scalatest:scalatest_3:3.2.14'
 }
 
 testing {
@@ -19,4 +27,21 @@ testing {
             useJUnitJupiter('5.9.1')
         }
     }
+}
+
+def ENABLE_PREVIEW = "--enable-preview"
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += [
+        ENABLE_PREVIEW,
+        "-Xlint:preview",
+    ]
+}
+
+tasks.withType(Test) {
+    jvmArgs.add(ENABLE_PREVIEW)
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs.add(ENABLE_PREVIEW)
 }
