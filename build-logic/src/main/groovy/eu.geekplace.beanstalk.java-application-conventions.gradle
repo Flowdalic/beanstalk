@@ -1,0 +1,13 @@
+plugins {
+	id 'eu.geekplace.beanstalk.java-common-conventions'
+
+	id 'application'
+}
+
+tasks.withType(JavaExec) {
+	applicationDefaultJvmArgs += [
+		"--enable-preview"
+		// TODO: Use ENABLE_PREVIEW from e.g.beanstalk.java-common-conventions plugin.
+		// ENABLE_PREVIEW,
+	]
+}

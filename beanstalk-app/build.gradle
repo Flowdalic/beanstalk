@@ -1,0 +1,12 @@
+plugins {
+	id 'eu.geekplace.beanstalk.java-application-conventions'
+}
+
+dependencies {
+	implementation project(':beanstalk-core')
+}
+
+application {
+	mainModule = 'eu.geekplace.beanstalk.app'
+	mainClass = 'eu.geekplace.beanstalk.app.App'
+}
