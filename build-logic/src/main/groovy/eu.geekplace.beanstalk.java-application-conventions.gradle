@@ -6,8 +6,9 @@ plugins {
 
 tasks.withType(JavaExec) {
 	applicationDefaultJvmArgs += [
-		"--enable-preview"
+		"--enable-preview",
 		// TODO: Use ENABLE_PREVIEW from e.g.beanstalk.java-common-conventions plugin.
 		// ENABLE_PREVIEW,
+		"--add-reads", "eu.geekplace.beanstalk.core=ALL-UNNAMED",
 	]
 }

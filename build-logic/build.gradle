@@ -5,3 +5,7 @@ plugins {
 repositories {
 	gradlePluginPortal()
 }
+
+dependencies {
+	implementation "org.javamodularity:moduleplugin:1.8.12"
+}
