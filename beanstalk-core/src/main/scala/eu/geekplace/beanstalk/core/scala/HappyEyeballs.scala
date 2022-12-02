@@ -8,14 +8,14 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.concurrent.Promise
 import scala.concurrent.duration._
-import scala.util.{Try, Success, Failure}
+import scala.util.{Try, Failure}
 
 import java.net.Socket
 import java.net.InetAddress
 import java.util.concurrent.ConcurrentLinkedQueue
 
 def happyEyeballs(targets: IterableOnce[InetAddress], port: Int, duration: Duration = 60.seconds)(implicit ec: ExecutionContext):
-    (Option[Socket], ConcurrentLinkedQueue[Exception]) = {
+    (Try[Socket], ConcurrentLinkedQueue[Exception]) = {
   val promise = Promise[Socket]()
   val exceptions = new ConcurrentLinkedQueue[Exception]()
 
@@ -30,19 +30,17 @@ def happyEyeballs(targets: IterableOnce[InetAddress], port: Int, duration: Durat
     }
   }
 
-  val socketOption = Try(Await.result(promise.future, duration)) match {
-    case Success(socket) => Some(socket)
-    case Failure(t) => {
+  val socketResult = Try(Await.result(promise.future, duration)) recoverWith {
+    case t: Throwable =>
       if (!promise.tryFailure(t)) {
         // In this case, the promise/future must have a socket already
         // set, which we now need to close to avoid leaking it.
         promise.future.value.get.get.close()
       }
-      None
-    }
+      Failure(t)
   }
 
-  (socketOption, exceptions)
+  (socketResult, exceptions)
 }
 
 def happyEyeballsWithVirtualThreads() = {
