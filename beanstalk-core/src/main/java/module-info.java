@@ -1,4 +1,5 @@
 module eu.geekplace.beanstalk.core {
+	exports eu.geekplace.beanstalk.core.loom.nowa;
 	exports eu.geekplace.beanstalk.core.loom;
 	exports eu.geekplace.beanstalk.core.scala;
 
