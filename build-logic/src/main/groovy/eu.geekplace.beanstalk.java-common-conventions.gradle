@@ -24,27 +24,30 @@ dependencies {
 	//testImplementation 'org.scalatest:scalatest_3:3.2.15'
 }
 
+// https://users.scala-lang.org/t/gradle-7-6-jdk-19-and-scala-3-java-lang-classnotfoundexception-scala-predef-even-though-scala-library-2-13-10-jar-is-in-classpath/8972/7?u=flow
 modularity.patchModule("org.scala.lang.scala3.library", "scala-library-2.13.10.jar")
+
+def ENABLE_PREVIEW = "--enable-preview"
 
 testing {
 	suites {
 		test {
-			useJUnitJupiter('5.9.1')
+			useJUnitJupiter('5.9.2')
+			targets.all {
+				testTask.configure {
+					// https://stackoverflow.com/a/72905390/194894
+					jvmArgs(ENABLE_PREVIEW)
+				}
+			}
 		}
 	}
 }
-
-def ENABLE_PREVIEW = "--enable-preview"
 
 tasks.withType(JavaCompile) {
 	options.compilerArgs += [
 		ENABLE_PREVIEW,
 		"-Xlint:preview",
 	]
-}
-
-tasks.withType(Test) {
-	jvmArgs.add(ENABLE_PREVIEW)
 }
 
 tasks.withType(JavaExec) {

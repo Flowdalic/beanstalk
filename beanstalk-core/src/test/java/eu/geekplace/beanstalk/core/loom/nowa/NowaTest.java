@@ -9,7 +9,7 @@ public class NowaTest {
 	@Test
 	public void fib() throws InterruptedException {
 		long res = NowaExamples.fib(16);
-		assertEquals(42L, res);
+		assertEquals(987L, res);
 	}
 	
 }
