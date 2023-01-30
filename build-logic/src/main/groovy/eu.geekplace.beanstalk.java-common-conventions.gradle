@@ -17,7 +17,11 @@ java {
 
 dependencies {
 	implementation 'org.scala-lang:scala3-library_3:3.2.1'
-	testImplementation 'org.scalatest:scalatest_3:3.2.15'
+	// Commented out. Causes:
+	// Error occurred during initialization of boot layer
+	// java.lang.module.FindException: Unable to derive module descriptor for /home/flo/.gradle/caches/modules-2/files-2.1/org.scalatest/scalatest_3/3.2.15/dfaadda82c4c862bf164bd114803fd163cf3b73e/scalatest_3-3.2.15.jar
+	// Caused by: java.lang.IllegalArgumentException: scalatest.3: Invalid module name: '3' is not a Java identifier
+	//testImplementation 'org.scalatest:scalatest_3:3.2.15'
 }
 
 modularity.patchModule("org.scala.lang.scala3.library", "scala-library-2.13.10.jar")
