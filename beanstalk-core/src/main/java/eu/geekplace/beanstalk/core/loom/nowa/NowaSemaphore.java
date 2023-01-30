@@ -4,7 +4,7 @@ package eu.geekplace.beanstalk.core.loom.nowa;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * A wait-free private semaphore, distilled from the wait-free continuation-stealing approach by Schmaus et. al [1].
@@ -38,15 +38,17 @@ public class NowaSemaphore {
 
     private volatile int counter = Integer.MAX_VALUE;
     private static final VarHandle COUNTER;
+    private volatile boolean signalled = false;
+    private static final VarHandle SIGNALLED;
     static {
+        var l = MethodHandles.lookup();
         try {
-            COUNTER = MethodHandles.lookup().findVarHandle(NowaSemaphore.class, "counter", int.class);
+            COUNTER = l.findVarHandle(NowaSemaphore.class, "counter", int.class);
+            SIGNALLED = l.findVarHandle(NowaSemaphore.class, "signalled", boolean.class);
         } catch (ReflectiveOperationException e) {
             throw new Error(e);
         }
     }
-
-    private final Semaphore waiterSemaphore = new Semaphore(0);
 
     private final Thread owner = Thread.currentThread();
 
@@ -77,7 +79,10 @@ public class NowaSemaphore {
         if (oldCounter == delta)
             return;
 
-        waiterSemaphore.acquire();
+        while (!((boolean) SIGNALLED.getAcquire(this))) {
+            LockSupport.park(this);
+            if (Thread.interrupted()) throw new InterruptedException();
+        }
     }
 
     public void signal() {
@@ -89,11 +94,13 @@ public class NowaSemaphore {
             // releasing a potential waiter.
             return;
 
-        waiterSemaphore.release();
+        SIGNALLED.setRelease(this, true);
+        LockSupport.unpark(owner);
     }
 
     public void reset() {
         requiredSignalCount = 0;
         counter = Integer.MAX_VALUE;
+        signalled = false;
     }
 }
