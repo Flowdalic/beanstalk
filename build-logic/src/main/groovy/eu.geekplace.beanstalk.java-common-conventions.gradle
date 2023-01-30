@@ -19,7 +19,7 @@ dependencies {
 	constraints {
 	}
 	implementation 'org.scala-lang:scala3-library_3:3.2.1'
-	testImplementation 'org.scalatest:scalatest_3:3.2.14'
+	testImplementation 'org.scalatest:scalatest_3:3.2.15'
 }
 
 modularity.patchModule("org.scala.lang.scala3.library", "scala-library-2.13.10.jar")
