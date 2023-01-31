@@ -18,4 +18,4 @@ eclipse:
 
 .PHONY: jmh
 jmh:
-	$(GRADLE) beanstalk-core:jmh
+	$(GRADLE) --console=plain beanstalk-core:jmh
