@@ -1,4 +1,4 @@
-package eu.geekplace.beanstalk.core.loom;
+package eu.geekplace.beanstalk.core.loom.examples;
 
 import jdk.incubator.concurrent.StructuredTaskScope;
 
