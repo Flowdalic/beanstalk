@@ -8,4 +8,5 @@ repositories {
 
 dependencies {
 	implementation "org.javamodularity:moduleplugin:1.8.12"
+	implementation "me.champeau.jmh:jmh-gradle-plugin:0.6.8"
 }

@@ -1,0 +1,15 @@
+// The JMH plugins is strange: it does not appear to properly support
+// multi-project builds. Hence we factor it in its own gradle
+// convention and only configure it for beanstalk-core.
+plugins {
+	id 'me.champeau.jmh'
+}
+
+jmh {
+	verbosity = 'EXTRA'
+	// TODO: Use ENABLE_PREVIEW from e.g.beanstalk.java-common-conventions plugin.
+	jvmArgsAppend = [
+		"--enable-preview",
+		"--add-modules jdk.incubator.concurrent",
+	]
+}
