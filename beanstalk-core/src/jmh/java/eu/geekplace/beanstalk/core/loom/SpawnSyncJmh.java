@@ -14,6 +14,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
 import eu.geekplace.beanstalk.core.loom.nowa.NowaSpawnSync;
+import eu.geekplace.beanstalk.core.loom.nowa.InlinedNowaSpawnSync;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
@@ -23,7 +24,7 @@ import eu.geekplace.beanstalk.core.loom.nowa.NowaSpawnSync;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class SpawnSyncJmh {
 
-	private long fibNum = 14;
+	private long fibNum = 18;
 
 	@Benchmark
 	public void fibNaiveSpawnSync(Blackhole blackhole) throws InterruptedException {
@@ -35,6 +36,13 @@ public class SpawnSyncJmh {
 	@Benchmark
 	public void fibNowaSpawnSync(Blackhole blackhole) throws InterruptedException {
 		SpawnSyncFactory spawnSyncFactory = () -> { return new NowaSpawnSync(); };
+		var res = Fib.fib(fibNum, spawnSyncFactory);
+		blackhole.consume(res);
+	}
+
+	@Benchmark
+	public void fibInlinedNowaSpawnSync(Blackhole blackhole) throws InterruptedException {
+		SpawnSyncFactory spawnSyncFactory = () -> { return new InlinedNowaSpawnSync(); };
 		var res = Fib.fib(fibNum, spawnSyncFactory);
 		blackhole.consume(res);
 	}
