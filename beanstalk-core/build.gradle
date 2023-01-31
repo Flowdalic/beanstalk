@@ -1,3 +1,4 @@
 plugins {
 	id 'eu.geekplace.beanstalk.java-library-conventions'
+	id 'eu.geekplace.beanstalk.jmh-conventions'
 }

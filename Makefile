@@ -6,4 +6,16 @@ run:
 
 .PHONY: check
 check:
-	$(GRADLE) check
+	$(GRADLE) $@
+
+.PHONY: clean
+clean:
+	$(GRADLE) $@
+
+.PHONY: eclipse
+eclipse:
+	$(GRADLE) $@
+
+.PHONY: jmh
+jmh:
+	$(GRADLE) beanstalk-core:jmh

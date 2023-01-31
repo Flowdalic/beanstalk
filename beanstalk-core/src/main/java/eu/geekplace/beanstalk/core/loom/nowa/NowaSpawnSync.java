@@ -5,10 +5,12 @@ package eu.geekplace.beanstalk.core.loom.nowa;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
+import eu.geekplace.beanstalk.core.loom.SpawnSync;
+
 /**
  * An API for efficient fork/join parallelism using {@link NowaSemaphore}.
  */
-public class NowaSpawnSync implements AutoCloseable {
+public class NowaSpawnSync implements SpawnSync {
 
 	private final NowaSemaphore nowaSemaphore = new NowaSemaphore();
 
