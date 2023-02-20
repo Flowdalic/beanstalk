@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0-with-classpath-exception
+// Copyright © 2023 Florian Schmaus
 package eu.geekplace.beanstalk.core.loom;
 
 import java.util.concurrent.TimeUnit;
@@ -13,9 +15,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
-
-import eu.geekplace.beanstalk.core.loom.nowa.NowaSpawnSync;
-import eu.geekplace.beanstalk.core.loom.nowa.InlinedNowaSpawnSync;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)

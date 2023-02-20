@@ -15,7 +15,7 @@ public enum SpawnSyncImplementation {
 
 	public final SpawnSyncFactory factory;
 
-	private SpawnSyncImplementation(SpawnSyncFactory factory) {
+	SpawnSyncImplementation(SpawnSyncFactory factory) {
 		this.factory = factory;
 	}
 

@@ -1,0 +1,2 @@
+\/\/ SPDX-License-Identifier: (Apache-2\.0|GPL-2\.0-with-classpath-exception)
+\/\/ Copyright © \d\d\d\d(-\d\d\d\d)? .*
