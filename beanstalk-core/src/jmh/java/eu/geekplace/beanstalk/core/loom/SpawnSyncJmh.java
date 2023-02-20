@@ -27,13 +27,16 @@ public class SpawnSyncJmh {
 	@Param({"18"})
 	private long fibNum;
 
+	@Param({"5"})
+	private int breadth;
+
 	@Param
 	private SpawnSyncImplementation spawnSyncImplementation;
 
 	@Benchmark
 	public void fib(Blackhole blackhole) throws InterruptedException  {
 		var spawnSyncFactory = spawnSyncImplementation.factory;
-		var res = Fib.fib(fibNum, spawnSyncFactory);
+		var res = Fib.pseudoFib(fibNum, spawnSyncFactory, breadth);
 		blackhole.consume(res);
 	}
 
