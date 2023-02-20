@@ -64,4 +64,18 @@ public class NaiveSpawnSync implements SpawnSync {
 	public void close() throws InterruptedException {
 		sync();
 	}
+
+	public static final Factory FACTORY = new Factory();
+
+	public static class Factory implements SpawnSyncFactory {
+
+		private Factory() {
+		}
+
+		@Override
+		public SpawnSync create() {
+			return new NaiveSpawnSync();
+		}
+
+	}
 }

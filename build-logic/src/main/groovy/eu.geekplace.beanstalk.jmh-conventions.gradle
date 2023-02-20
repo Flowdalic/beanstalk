@@ -13,3 +13,9 @@ jmh {
 		"--add-modules jdk.incubator.concurrent",
 	]
 }
+
+jmhRunBytecodeGenerator {
+	jvmArgs = [
+		"--enable-preview",
+	]
+}

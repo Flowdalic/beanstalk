@@ -9,6 +9,7 @@ import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
 
 import eu.geekplace.beanstalk.core.loom.SpawnSync;
+import eu.geekplace.beanstalk.core.loom.SpawnSyncFactory;
 
 /**
  * An API for efficient fork/join parallelism with the {@link NowaSemaphore} inlined.
@@ -104,5 +105,19 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 	@Override
 	public void close() throws InterruptedException {
 		sync();
+	}
+
+	public static final Factory FACTORY = new Factory();
+
+	public static class Factory implements SpawnSyncFactory {
+
+		private Factory() {
+		}
+
+		@Override
+		public SpawnSync create() {
+			return new InlinedNowaSpawnSync();
+		}
+
 	}
 }

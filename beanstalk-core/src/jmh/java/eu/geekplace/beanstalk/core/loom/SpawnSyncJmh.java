@@ -8,6 +8,7 @@ import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
@@ -24,32 +25,15 @@ import eu.geekplace.beanstalk.core.loom.nowa.InlinedNowaSpawnSync;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class SpawnSyncJmh {
 
-	private long fibNum = 18;
+	@Param({"18"})
+	private long fibNum;
+
+	@Param
+	private SpawnSyncImplementation spawnSyncImplementation;
 
 	@Benchmark
-	public void fibNaiveSpawnSync(Blackhole blackhole) throws InterruptedException {
-		SpawnSyncFactory spawnSyncFactory = () -> { return new NaiveSpawnSync(); };
-		var res = Fib.fib(fibNum, spawnSyncFactory);
-		blackhole.consume(res);
-	}
-
-	@Benchmark
-	public void fibNowaSpawnSync(Blackhole blackhole) throws InterruptedException {
-		SpawnSyncFactory spawnSyncFactory = () -> { return new NowaSpawnSync(); };
-		var res = Fib.fib(fibNum, spawnSyncFactory);
-		blackhole.consume(res);
-	}
-
-	@Benchmark
-	public void fibInlinedNowaSpawnSync(Blackhole blackhole) throws InterruptedException {
-		SpawnSyncFactory spawnSyncFactory = () -> { return new InlinedNowaSpawnSync(); };
-		var res = Fib.fib(fibNum, spawnSyncFactory);
-		blackhole.consume(res);
-	}
-
-	@Benchmark
-	public void fibStructuredTaskScopeSpawnSync(Blackhole blackhole) throws InterruptedException {
-		SpawnSyncFactory spawnSyncFactory = () -> { return new StructuredTaskScopeSpawnSync(); };
+	public void fib(Blackhole blackhole) throws InterruptedException  {
+		var spawnSyncFactory = spawnSyncImplementation.factory;
 		var res = Fib.fib(fibNum, spawnSyncFactory);
 		blackhole.consume(res);
 	}
