@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+cd "${SCRIPT_DIR}"
+
+"${GRADLE_BIN:-./gradlew}" jmhJar --quiet
+
+exec java \
+	 --enable-preview \
+	 --add-modules jdk.incubator.concurrent \
+	 -jar beanstalk-core/build/libs/beanstalk-core-jmh.jar \
+	 ${@}
