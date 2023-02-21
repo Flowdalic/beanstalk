@@ -8,6 +8,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
 
+import jdk.internal.vm.annotation.Contended;
+
 import eu.geekplace.beanstalk.core.loom.SpawnSync;
 import eu.geekplace.beanstalk.core.loom.SpawnSyncFactory;
 
@@ -18,6 +20,7 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 
 	private int requiredSignalCount;
 
+	@Contended
 	private volatile int counter = Integer.MAX_VALUE;
 	private static final VarHandle COUNTER;
 	private volatile boolean signalled = false;

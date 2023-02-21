@@ -4,11 +4,11 @@ plugins {
 	id 'application'
 }
 
+import eu.geekplace.beanstalk.BuildConstants
+
 tasks.withType(JavaExec) {
+	applicationDefaultJvmArgs += BuildConstants.EXTRA_JVM_ARGS
 	applicationDefaultJvmArgs += [
-		"--enable-preview",
-		// TODO: Use ENABLE_PREVIEW from e.g.beanstalk.java-common-conventions plugin.
-		// ENABLE_PREVIEW,
 		"--add-reads", "eu.geekplace.beanstalk.core=ALL-UNNAMED",
 	]
 }
