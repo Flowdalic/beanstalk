@@ -17,9 +17,9 @@ import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@Warmup(iterations = 3, time = 10)
-@Measurement(iterations = 5, time = 10)
+@BenchmarkMode(Mode.SingleShotTime)
+@Warmup(iterations = 5, time = 10)
+@Measurement(iterations = 25)
 @Fork(value = 1)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class SpawnSyncJmh {
