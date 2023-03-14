@@ -6,8 +6,19 @@ cd "${SCRIPT_DIR}"
 
 "${GRADLE_BIN:-./gradlew}" jmhJar --quiet
 
-exec java \
+GIT_COMMIT_DESCRIPTION=$(git describe --always --tags --dirty=+)
+GIT_COMMIT_BRANCH=$(git symbolic-ref --short HEAD)
+
+START=$(date +%s)
+java \
 	 --enable-preview \
 	 --add-modules jdk.incubator.concurrent \
 	 -jar beanstalk-core/build/libs/beanstalk-core-jmh.jar \
 	 ${@}
+STOP=$(date +%s)
+DURATION_SECS=$(( STOP - START ))
+DURATION_HUMAN_READABLE=$(eval "echo $(date -ud "@${DURATION_SECS}" +'$((%s/3600/24)) days %H hours %M minutes %S seconds')")
+
+echo "Beanstalk JMH $@"
+echo "git: ${GIT_COMMIT_DESCRIPTION} - ${GIT_COMMIT_BRANCH}"
+echo "took ${DURATION_HUMAN_READABLE}"
