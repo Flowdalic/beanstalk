@@ -23,13 +23,10 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 	@Contended
 	private volatile int counter = Integer.MAX_VALUE;
 	private static final VarHandle COUNTER;
-	private volatile boolean signalled = false;
-	private static final VarHandle SIGNALLED;
 	static {
 		var l = MethodHandles.lookup();
 		try {
 			COUNTER = l.findVarHandle(InlinedNowaSpawnSync.class, "counter", int.class);
-			SIGNALLED = l.findVarHandle(InlinedNowaSpawnSync.class, "signalled", boolean.class);
 		} catch (NoSuchFieldException | IllegalAccessException e) {
 			throw new Error(e);
 		}
@@ -72,7 +69,6 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 					// releasing a potential waiter.
 					return;
 
-				SIGNALLED.setRelease(this, true);
 				LockSupport.unpark(owner);
 			}
 		});
@@ -91,7 +87,7 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 		if (oldCounter == delta)
 			return;
 
-		while (!((boolean) SIGNALLED.getAcquire(this))) {
+		while (((int) COUNTER.getAcquire(this)) > 0) {
 			LockSupport.park(this);
 			if (Thread.interrupted())
 				throw new InterruptedException();
@@ -102,7 +98,6 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 		sync();
 		requiredSignalCount = 0;
 		counter = Integer.MAX_VALUE;
-		signalled = false;
 	}
 
 	@Override
