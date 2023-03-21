@@ -57,6 +57,8 @@ public class NowaSemaphore {
 	private final Thread owner = Thread.currentThread();
 
 	private void throwIfNotOwningThread() {
+		if (!NowaConfiguration.CHECK_IF_THREAD_IS_OWNER) return;
+
 		var currentThread = Thread.currentThread();
 		if (currentThread != owner)
 			throw new WrongThreadException("Current thread '" + currentThread + "' is not the owner ('" + owner + "')");
