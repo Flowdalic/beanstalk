@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright © 2023 Florian Schmaus
 package eu.geekplace.beanstalk.app;
 
 import eu.geekplace.beanstalk.core.loom.nowa.NowaExamples;

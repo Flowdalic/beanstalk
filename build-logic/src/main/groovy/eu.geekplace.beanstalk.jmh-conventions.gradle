@@ -5,11 +5,16 @@ plugins {
 	id 'me.champeau.jmh'
 }
 
+import eu.geekplace.beanstalk.BuildConstants
+
 jmh {
 	verbosity = 'EXTRA'
 	// TODO: Use ENABLE_PREVIEW from e.g.beanstalk.java-common-conventions plugin.
-	jvmArgsAppend = [
-		"--enable-preview",
+	jvmArgsAppend = BuildConstants.EXTRA_JVM_ARGS + [
 		"--add-modules jdk.incubator.concurrent",
 	]
+}
+
+jmhRunBytecodeGenerator {
+	jvmArgs = [ BuildConstants.ENABLE_PREVIEW ]
 }

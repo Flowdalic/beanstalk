@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0-with-classpath-exception
+// Copyright © 2023 Florian Schmaus
 package eu.geekplace.beanstalk.core.loom;
 
 import java.lang.invoke.MethodHandles;
@@ -63,5 +65,19 @@ public class NaiveSpawnSync implements SpawnSync {
 	@Override
 	public void close() throws InterruptedException {
 		sync();
+	}
+
+	public static final Factory FACTORY = new Factory();
+
+	public static class Factory implements SpawnSyncFactory {
+
+		private Factory() {
+		}
+
+		@Override
+		public SpawnSync create() {
+			return new NaiveSpawnSync();
+		}
+
 	}
 }

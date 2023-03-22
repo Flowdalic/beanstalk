@@ -8,7 +8,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
 
+import jdk.internal.vm.annotation.Contended;
+
 import eu.geekplace.beanstalk.core.loom.SpawnSync;
+import eu.geekplace.beanstalk.core.loom.SpawnSyncFactory;
 
 /**
  * An API for efficient fork/join parallelism with the {@link NowaSemaphore} inlined.
@@ -17,15 +20,13 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 
 	private int requiredSignalCount;
 
+	@Contended
 	private volatile int counter = Integer.MAX_VALUE;
 	private static final VarHandle COUNTER;
-	private volatile boolean signalled = false;
-	private static final VarHandle SIGNALLED;
 	static {
 		var l = MethodHandles.lookup();
 		try {
 			COUNTER = l.findVarHandle(InlinedNowaSpawnSync.class, "counter", int.class);
-			SIGNALLED = l.findVarHandle(InlinedNowaSpawnSync.class, "signalled", boolean.class);
 		} catch (NoSuchFieldException | IllegalAccessException e) {
 			throw new Error(e);
 		}
@@ -34,6 +35,8 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 	private final Thread owner = Thread.currentThread();
 
 	private void throwIfNotOwningThread() {
+		if (!NowaConfiguration.CHECK_IF_THREAD_IS_OWNER) return;
+
 		var currentThread = Thread.currentThread();
 		if (currentThread != owner)
 			throw new WrongThreadException("Current thread '" + currentThread + "' is not the owner ('" + owner + "')");
@@ -68,7 +71,6 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 					// releasing a potential waiter.
 					return;
 
-				SIGNALLED.setRelease(this, true);
 				LockSupport.unpark(owner);
 			}
 		});
@@ -87,7 +89,7 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 		if (oldCounter == delta)
 			return;
 
-		while (!((boolean) SIGNALLED.getAcquire(this))) {
+		while (((int) COUNTER.getAcquire(this)) > 0) {
 			LockSupport.park(this);
 			if (Thread.interrupted())
 				throw new InterruptedException();
@@ -98,11 +100,24 @@ public class InlinedNowaSpawnSync implements SpawnSync {
 		sync();
 		requiredSignalCount = 0;
 		counter = Integer.MAX_VALUE;
-		signalled = false;
 	}
 
 	@Override
 	public void close() throws InterruptedException {
 		sync();
+	}
+
+	public static final Factory FACTORY = new Factory();
+
+	public static class Factory implements SpawnSyncFactory {
+
+		private Factory() {
+		}
+
+		@Override
+		public SpawnSync create() {
+			return new InlinedNowaSpawnSync();
+		}
+
 	}
 }

@@ -6,9 +6,12 @@ import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 import eu.geekplace.beanstalk.core.loom.SpawnSync;
+import eu.geekplace.beanstalk.core.loom.SpawnSyncFactory;
 
 /**
- * An API for efficient fork/join parallelism using {@link NowaSemaphore}.
+ * An API for efficient fork/join parallelism using {@link NowaSemaphore}. Note
+ * that the code in this class is better readable, but the most efficient
+ * implementation is provided by {@link InlinedNowaSpawnSync}.
  */
 public class NowaSpawnSync implements SpawnSync {
 
@@ -52,5 +55,19 @@ public class NowaSpawnSync implements SpawnSync {
 	@Override
 	public void close() throws InterruptedException {
 		sync();
+	}
+
+	public static final Factory FACTORY = new Factory();
+
+	public static class Factory implements SpawnSyncFactory {
+
+		private Factory() {
+		}
+
+		@Override
+		public SpawnSync create() {
+			return new NowaSpawnSync();
+		}
+
 	}
 }

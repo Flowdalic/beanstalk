@@ -45,13 +45,10 @@ public class NowaSemaphore {
 
 	private volatile int counter = Integer.MAX_VALUE;
 	private static final VarHandle COUNTER;
-	private volatile boolean signalled = false;
-	private static final VarHandle SIGNALLED;
 	static {
 		var l = MethodHandles.lookup();
 		try {
 			COUNTER = l.findVarHandle(NowaSemaphore.class, "counter", int.class);
-			SIGNALLED = l.findVarHandle(NowaSemaphore.class, "signalled", boolean.class);
 		} catch (NoSuchFieldException | IllegalAccessException e) {
 			throw new Error(e);
 		}
@@ -60,6 +57,8 @@ public class NowaSemaphore {
 	private final Thread owner = Thread.currentThread();
 
 	private void throwIfNotOwningThread() {
+		if (!NowaConfiguration.CHECK_IF_THREAD_IS_OWNER) return;
+
 		var currentThread = Thread.currentThread();
 		if (currentThread != owner)
 			throw new WrongThreadException("Current thread '" + currentThread + "' is not the owner ('" + owner + "')");
@@ -86,7 +85,7 @@ public class NowaSemaphore {
 		if (oldCounter == delta)
 			return;
 
-		while (!((boolean) SIGNALLED.getAcquire(this))) {
+		while (((int) COUNTER.getAcquire(this)) > 0) {
 			LockSupport.park(this);
 			if (Thread.interrupted())
 				throw new InterruptedException();
@@ -102,13 +101,11 @@ public class NowaSemaphore {
 			// releasing a potential waiter.
 			return;
 
-		SIGNALLED.setRelease(this, true);
 		LockSupport.unpark(owner);
 	}
 
 	public void reset() {
 		requiredSignalCount = 0;
 		counter = Integer.MAX_VALUE;
-		signalled = false;
 	}
 }
