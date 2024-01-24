@@ -20,7 +20,7 @@ java {
 }
 
 dependencies {
-	implementation 'org.scala-lang:scala3-library_3:3.2.1'
+	implementation 'org.scala-lang:scala3-library_3:3.3.1'
 	// Commented out. Causes:
 	// Error occurred during initialization of boot layer
 	// java.lang.module.FindException: Unable to derive module descriptor for /home/flo/.gradle/caches/modules-2/files-2.1/org.scalatest/scalatest_3/3.2.15/dfaadda82c4c862bf164bd114803fd163cf3b73e/scalatest_3-3.2.15.jar
