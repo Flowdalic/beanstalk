@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-with-classpath-exception
-// Copyright © 2023 Florian Schmaus
+// Copyright © 2023-2025 Florian Schmaus
 package eu.geekplace.beanstalk.core.loom;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
-import jdk.incubator.concurrent.StructuredTaskScope;
+import java.util.concurrent.StructuredTaskScope;
 
 public class StructuredTaskScopeSpawnSync implements SpawnSync {
 
@@ -15,16 +14,11 @@ public class StructuredTaskScopeSpawnSync implements SpawnSync {
 	@Override
 	@SuppressWarnings("preview")
 	public <T> Supplier<T> spawn(Callable<? extends T> fun) {
-		var future = scope.fork(fun);
+		var subtask = scope.fork(fun);
 		return new Supplier<T>() {
 			@Override
 			public T get() {
-				try {
-					return future.get();
-				} catch (InterruptedException | ExecutionException e) {
-					e.printStackTrace();
-					return null;
-				}
+				return subtask.get();
 			}
 		};
 	}

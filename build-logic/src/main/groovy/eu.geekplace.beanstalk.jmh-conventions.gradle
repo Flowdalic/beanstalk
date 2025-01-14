@@ -11,7 +11,10 @@ jmh {
 	verbosity = 'EXTRA'
 	// TODO: Use ENABLE_PREVIEW from e.g.beanstalk.java-common-conventions plugin.
 	jvmArgsAppend = BuildConstants.EXTRA_JVM_ARGS + [
-		"--add-modules jdk.incubator.concurrent",
+		// The following was required pre-Java 21. Let's keep it as
+		// example in case we need to enable an incubating module
+		// again.
+		// "--add-modules jdk.incubator.concurrent",
 	]
 }
 

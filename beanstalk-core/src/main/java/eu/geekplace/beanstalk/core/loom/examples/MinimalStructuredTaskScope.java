@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright © 2023 Florian Schmaus
+// Copyright © 2023-2025 Florian Schmaus
 package eu.geekplace.beanstalk.core.loom.examples;
 
-import jdk.incubator.concurrent.StructuredTaskScope;
+import java.util.concurrent.StructuredTaskScope;
 
 public class MinimalStructuredTaskScope {
 
