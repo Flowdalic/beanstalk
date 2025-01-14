@@ -78,18 +78,15 @@ public class NowaSemaphore {
 
 		int delta = Integer.MAX_VALUE - requiredSignalCount;
 
-		if (((int) COUNTER.getOpaque(this)) - delta == 0)
-			return;
-
 		int oldCounter = (int) COUNTER.getAndAddAcquire(this, -delta);
 		if (oldCounter == delta)
 			return;
 
-		while (((int) COUNTER.getAcquire(this)) > 0) {
+		do {
 			LockSupport.park(this);
 			if (Thread.interrupted())
 				throw new InterruptedException();
-		}
+		} while (((int) COUNTER.getAcquire(this)) > 0);
 	}
 
 	public void signal() {
