@@ -12,7 +12,6 @@ GIT_COMMIT_BRANCH=$(git symbolic-ref --short HEAD)
 START=$(date +%s)
 java \
 	 --enable-preview \
-	 --add-modules jdk.incubator.concurrent \
 	 -jar beanstalk-core/build/libs/beanstalk-core-jmh.jar \
 	 ${@}
 STOP=$(date +%s)
