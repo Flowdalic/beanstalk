@@ -16,6 +16,7 @@ jmh {
 		// again.
 		// "--add-modules jdk.incubator.concurrent",
 	]
+	jmhVersion = '1.37'
 }
 
 jmhRunBytecodeGenerator {
