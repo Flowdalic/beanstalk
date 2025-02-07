@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
 	implementation project(':beanstalk-core')
+	implementation 'org.openjdk.jol:jol-core:0.17'
 }
 
 application {

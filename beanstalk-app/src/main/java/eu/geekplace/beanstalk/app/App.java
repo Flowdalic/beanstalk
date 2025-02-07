@@ -2,7 +2,9 @@
 // Copyright © 2023 Florian Schmaus
 package eu.geekplace.beanstalk.app;
 
+import eu.geekplace.beanstalk.core.loom.nowa.InlinedNowaSpawnSync;
 import eu.geekplace.beanstalk.core.loom.nowa.NowaExamples;
+import org.openjdk.jol.info.ClassLayout;
 
 public class App {
 
@@ -13,6 +15,9 @@ public class App {
 
 		long fibSixteen = NowaExamples.fib(16);
 		System.out.println("fib(16): " + fibSixteen);
+
+		var layout = ClassLayout.parseClass(InlinedNowaSpawnSync.class).toPrintable();
+		System.out.println(layout);
 	}
 
 }

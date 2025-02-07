@@ -5,4 +5,5 @@ module eu.geekplace.beanstalk.core {
 	exports eu.geekplace.beanstalk.core.scala;
 
 	requires org.scala.lang.scala3.library;
+	//	requires jmh.core;
 }
